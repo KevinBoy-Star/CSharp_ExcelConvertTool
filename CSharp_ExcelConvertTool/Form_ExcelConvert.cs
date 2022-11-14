@@ -47,8 +47,8 @@ namespace CSharp_ExcelConvertTool
         private void InitOperation()
         {
             //初始化转换类型下拉框
-            comboBox_VoiceQuality.Items.AddRange(ConvertTypeList.ToArray());
-            comboBox_VoiceQuality.Text = ConvertTypeList[0];
+            comboBox_ConvertType.Items.AddRange(ConvertTypeList.ToArray());
+            comboBox_ConvertType.Text = ConvertTypeList[0];
         }
 
         //按钮-选择表格
@@ -64,6 +64,25 @@ namespace CSharp_ExcelConvertTool
             }
         }
 
+        /// <summary>
+        /// 下拉框-转化类型
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void comboBox_ConvertType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(comboBox_ConvertType.Text== "C# Class")
+            {
+                label_SaveFileName.Visible = false;
+                textBox_FileName.Visible = false;
+            }
+            else
+            {
+                label_SaveFileName.Visible = true;
+                textBox_FileName.Visible = true;
+            }
+        }
+
         //按钮-设置文件路径
         private void button_SetSavePath_Click(object sender, EventArgs e)
         {
@@ -76,14 +95,33 @@ namespace CSharp_ExcelConvertTool
         //按钮-转换
         private void button_Convert_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(textBox_FileName.Text) || string.IsNullOrEmpty(textBox_ExcelPath.Text))
+            if (!string.IsNullOrEmpty(textBox_ExcelPath.Text))
+            {
+                if (textBox_FileName.Visible)
+                {
+                    if (string.IsNullOrEmpty(textBox_FileName.Text))
+                    {
+                        MessageBoxButtons messButton = MessageBoxButtons.OK;
+                        MessageBoxEx.Show(this, "输出文件名称不能为空", "警告", messButton);
+                        return;
+                    }
+
+                    if (string.IsNullOrEmpty(outputPath))
+                    {
+                        MessageBoxButtons messButton = MessageBoxButtons.OK;
+                        MessageBoxEx.Show(this, "文件输出路径为空", "警告", messButton);
+                        return;
+                    }
+                }
+            }
+            else
             {
                 MessageBoxButtons messButton = MessageBoxButtons.OK;
-                MessageBoxEx.Show(this, "Excel或文件名称不能为空", "警告", messButton);
+                MessageBoxEx.Show(this, "Excel不能为空", "警告", messButton);
                 return;
             }
 
-            switch (comboBox_VoiceQuality.Text)
+            switch (comboBox_ConvertType.Text)
             {
                 case "Json": ToJson(); break;
                 case "Xml": ToXml(); break;

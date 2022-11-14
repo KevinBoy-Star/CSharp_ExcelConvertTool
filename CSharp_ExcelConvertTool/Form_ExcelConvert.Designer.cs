@@ -37,7 +37,7 @@ namespace CSharp_ExcelConvertTool
             this.label_DragPrompt2 = new System.Windows.Forms.Label();
             this.label_DragPrompt1 = new System.Windows.Forms.Label();
             this.listView_DragExcel = new System.Windows.Forms.ListView();
-            this.comboBox_VoiceQuality = new System.Windows.Forms.ComboBox();
+            this.comboBox_ConvertType = new System.Windows.Forms.ComboBox();
             this.label_ConvertType = new System.Windows.Forms.Label();
             this.button_SetSavePath = new System.Windows.Forms.Button();
             this.textBox_ConvertSavePath = new System.Windows.Forms.TextBox();
@@ -132,14 +132,15 @@ namespace CSharp_ExcelConvertTool
             this.listView_DragExcel.DragDrop += new System.Windows.Forms.DragEventHandler(this.listView_DragExcel_DragDrop);
             this.listView_DragExcel.DragEnter += new System.Windows.Forms.DragEventHandler(this.listView_DragExcel_DragEnter);
             // 
-            // comboBox_VoiceQuality
+            // comboBox_ConvertType
             // 
-            this.comboBox_VoiceQuality.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox_VoiceQuality.FormattingEnabled = true;
-            this.comboBox_VoiceQuality.Location = new System.Drawing.Point(115, 74);
-            this.comboBox_VoiceQuality.Name = "comboBox_VoiceQuality";
-            this.comboBox_VoiceQuality.Size = new System.Drawing.Size(100, 20);
-            this.comboBox_VoiceQuality.TabIndex = 48;
+            this.comboBox_ConvertType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_ConvertType.FormattingEnabled = true;
+            this.comboBox_ConvertType.Location = new System.Drawing.Point(115, 74);
+            this.comboBox_ConvertType.Name = "comboBox_ConvertType";
+            this.comboBox_ConvertType.Size = new System.Drawing.Size(100, 20);
+            this.comboBox_ConvertType.TabIndex = 48;
+            this.comboBox_ConvertType.SelectedIndexChanged += new System.EventHandler(this.comboBox_ConvertType_SelectedIndexChanged);
             // 
             // label_ConvertType
             // 
@@ -231,7 +232,7 @@ namespace CSharp_ExcelConvertTool
             this.Controls.Add(this.button_SetSavePath);
             this.Controls.Add(this.textBox_ConvertSavePath);
             this.Controls.Add(this.label_ConvertSavePath);
-            this.Controls.Add(this.comboBox_VoiceQuality);
+            this.Controls.Add(this.comboBox_ConvertType);
             this.Controls.Add(this.label_ConvertType);
             this.Controls.Add(this.pictureBox_Excel);
             this.Controls.Add(this.label_DragPrompt2);
@@ -262,7 +263,7 @@ namespace CSharp_ExcelConvertTool
         private System.Windows.Forms.Label label_DragPrompt2;
         private System.Windows.Forms.Label label_DragPrompt1;
         private System.Windows.Forms.ListView listView_DragExcel;
-        private System.Windows.Forms.ComboBox comboBox_VoiceQuality;
+        private System.Windows.Forms.ComboBox comboBox_ConvertType;
         private System.Windows.Forms.Label label_ConvertType;
         private System.Windows.Forms.Button button_SetSavePath;
         private System.Windows.Forms.TextBox textBox_ConvertSavePath;
