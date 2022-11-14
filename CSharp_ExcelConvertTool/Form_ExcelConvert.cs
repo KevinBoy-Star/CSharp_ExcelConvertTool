@@ -356,7 +356,67 @@ namespace CSharp_ExcelConvertTool
         /// </summary>
         private void ToCSharpClass()
         {
+            try
+            {
+                FileStream fs = new FileStream(textBox_ExcelPath.Text, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                IWorkbook workbook = Path.GetExtension(textBox_ExcelPath.Text) == ".xls" ? (IWorkbook)new HSSFWorkbook(fs) : (IWorkbook)new XSSFWorkbook(fs);
 
+                for (int i = 0; i < workbook.NumberOfSheets; i++)
+                {
+                    ISheet sheet = workbook.GetSheetAt(i);
+
+                    string tag = sheet.GetRow(0).GetCell(0).ToString();
+                    if (!tag.Equals("class")) { continue; }
+
+                    string outputFile = outputPath + @"\" + sheet.SheetName + ".cs";
+
+                    StringBuilder sbOutput = new StringBuilder();
+
+                    //添加脚本描述
+                    sbOutput.AppendLine("/*");
+                    sbOutput.AppendLine(" * 描述:该脚本为自动生成,请勿直接修改");
+                    sbOutput.AppendLine(" * 功能:根据配置文件自动生成C#类");
+                    sbOutput.AppendLine(" */");
+
+                    sbOutput.AppendLine();
+
+                    //定义类
+                    sbOutput.AppendLine($"public class {sheet.SheetName}");
+                    sbOutput.AppendLine("{");
+
+                    for (int cellNum = 1; cellNum < sheet.GetRow(0).LastCellNum; cellNum++)
+                    {
+                        //数据类型
+                        string type = sheet.GetRow(2).GetCell(cellNum).ToString();
+
+                        //字段
+                        string filed = sheet.GetRow(1).GetCell(cellNum).ToString();
+
+                        //注释
+                        string summary = sheet.GetRow(0).GetCell(cellNum).ToString();
+
+                        sbOutput.AppendLine("    /// <summary>");
+                        sbOutput.AppendLine($"    /// {summary}");
+                        sbOutput.AppendLine("    /// <summary>");
+                        sbOutput.AppendLine($"    public {type} {filed};");
+                        sbOutput.AppendLine();
+                    }
+
+                    sbOutput.AppendLine("}");
+
+                    StreamWriter sw = new StreamWriter(outputFile);
+                    sw.Write(sbOutput.ToString());
+                    sw.Close();
+                }
+
+                MessageBoxButtons messButton = MessageBoxButtons.OK;
+                MessageBoxEx.Show(this, "Excel转C# class成功", "恭喜", messButton);
+            }
+            catch (Exception ex)
+            {
+                MessageBoxButtons messButton = MessageBoxButtons.OK;
+                MessageBoxEx.Show(this, ex.Message, "警告", messButton);
+            }
         }
 
         /// <summary>

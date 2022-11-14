@@ -29,3 +29,4 @@ G:\Git\CSharp_ExcelConvertTool\CSharp_ExcelConvertTool\bin\Debug\Spire.XLS.dll
 G:\Git\CSharp_ExcelConvertTool\CSharp_ExcelConvertTool\bin\Debug\Microsoft.mshtml.dll
 G:\Git\CSharp_ExcelConvertTool\CSharp_ExcelConvertTool\bin\Debug\Spire.Pdf.xml
 G:\Git\CSharp_ExcelConvertTool\CSharp_ExcelConvertTool\bin\Debug\Spire.XLS.xml
+G:\Git\CSharp_ExcelConvertTool\CSharp_ExcelConvertTool\obj\Debug\CSharp_ExcelConvertTool.csproj.AssemblyReference.cache
