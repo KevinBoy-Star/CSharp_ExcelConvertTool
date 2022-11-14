@@ -1,14 +1,15 @@
-﻿using System;
+﻿using NPOI.HSSF.UserModel;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using Spire.Xls;
 
 namespace CSharp_ExcelConvertTool
 {
@@ -20,9 +21,12 @@ namespace CSharp_ExcelConvertTool
         private List<string> ConvertTypeList = new List<string>() 
         {
             "Json",
+            "Xml",
+            "JsonBase64",
+            "XmlBase64",
+            "JsonBinary",
+            "XmlBinary",
             "C# Class",
-            "Binary",
-            "JsonBinary"
         };
 
         private string outputPath;              //输出文件夹
@@ -79,7 +83,16 @@ namespace CSharp_ExcelConvertTool
                 return;
             }
 
-
+            switch (comboBox_VoiceQuality.Text)
+            {
+                case "Json": ToJson(); break;
+                case "Xml": ToXml(); break;
+                case "JsonBase64": ToJsonBase64(); break;
+                case "XmlBase64": ToXmlBase64(); break;
+                case "JsonBinary": ToJsonBinary(); break;
+                case "XmlBinary": ToXmlBinary(); break;
+                case "C# Class": ToCSharpClass(); break;
+            }
         }
 
         //按钮-打开文件夹
@@ -136,25 +149,359 @@ namespace CSharp_ExcelConvertTool
             }
         }
 
-
+        /// <summary>
+        /// Excel转Json
+        /// </summary>
         private void ToJson()
         {
+            try
+            {
+                List<DataTable> dataTableList = GetDataTablesFromExcel(textBox_ExcelPath.Text);
 
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.Append("{\n");
+
+                for (int i = 0; i < dataTableList.Count; i++)
+                {
+                    if (i < dataTableList.Count - 1)
+                    {
+                        stringBuilder.Append(DataTableToJson(dataTableList[i]) + ",\n");
+                    }
+                    else
+                    {
+                        stringBuilder.Append(DataTableToJson(dataTableList[i]) + "\n");
+                    }
+                }
+
+                stringBuilder.Append("}");
+
+                StreamWriter sw = new StreamWriter(outputPath + @"\" + textBox_FileName.Text + ".json");
+                sw.Write(stringBuilder.ToString());
+                sw.Close();
+
+                MessageBoxButtons messButton = MessageBoxButtons.OK;
+                MessageBoxEx.Show(this, "Excel转Json成功", "恭喜", messButton);
+            }
+            catch(Exception ex)
+            {
+                MessageBoxButtons messButton = MessageBoxButtons.OK;
+                MessageBoxEx.Show(this, ex.Message, "警告", messButton);
+            }
         }
 
+        /// <summary>
+        /// Excel转Xml
+        /// </summary>
+        private void ToXml()
+        {
+            try
+            {
+                Workbook workbook = new Workbook();
+                workbook.LoadFromFile(textBox_ExcelPath.Text);
+                workbook.SaveAsXml(outputPath + @"\" + textBox_FileName.Text + ".xml");
+
+                MessageBoxButtons messButton = MessageBoxButtons.OK;
+                MessageBoxEx.Show(this, "Excel转Xml成功", "恭喜", messButton);
+            }
+            catch(Exception ex)
+            {
+                MessageBoxButtons messButton = MessageBoxButtons.OK;
+                MessageBoxEx.Show(this, ex.Message, "警告", messButton);
+            }
+        }
+
+        /// <summary>
+        /// Excel转Json Base64位字符串
+        /// </summary>
+        private void ToJsonBase64()
+        {
+            try
+            {
+                List<DataTable> dataTableList = GetDataTablesFromExcel(textBox_ExcelPath.Text);
+
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.Append("{\n");
+
+                for (int i = 0; i < dataTableList.Count; i++)
+                {
+                    if (i < dataTableList.Count - 1)
+                    {
+                        stringBuilder.Append(DataTableToJson(dataTableList[i]) + ",\n");
+                    }
+                    else
+                    {
+                        stringBuilder.Append(DataTableToJson(dataTableList[i]) + "\n");
+                    }
+                }
+
+                stringBuilder.Append("}");
+
+                //配置文件加密
+                byte[] datas = Encoding.UTF8.GetBytes(stringBuilder.ToString());
+                string dataBase64 = Convert.ToBase64String(datas);
+                StreamWriter swData = new StreamWriter(outputPath + @"\" + textBox_FileName.Text + ".base64");
+                swData.Write(dataBase64);
+                swData.Close();
+
+                MessageBoxButtons messButton = MessageBoxButtons.OK;
+                MessageBoxEx.Show(this, "Excel转Json Base64位字符串成功", "恭喜", messButton);
+            }
+            catch (Exception ex)
+            {
+                MessageBoxButtons messButton = MessageBoxButtons.OK;
+                MessageBoxEx.Show(this, ex.Message, "警告", messButton);
+            }
+        }
+
+        /// <summary>
+        /// Excel转Xml Base64为字符串
+        /// </summary>
+        private void ToXmlBase64()
+        {
+            try
+            {
+                Workbook workbook = new Workbook();
+                workbook.LoadFromFile(textBox_ExcelPath.Text);
+
+                MemoryStream ms = new MemoryStream();
+                workbook.SaveAsXml(ms);
+
+                string dataBase64 = Convert.ToBase64String(ms.ToArray());
+                StreamWriter swData = new StreamWriter(outputPath + @"\" + textBox_FileName.Text + ".base64");
+                swData.Write(dataBase64);
+                swData.Close();
+                ms.Close();
+
+                MessageBoxButtons messButton = MessageBoxButtons.OK;
+                MessageBoxEx.Show(this, "Excel转Xml Base64位字符串成功", "恭喜", messButton);
+            }
+            catch (Exception ex)
+            {
+                MessageBoxButtons messButton = MessageBoxButtons.OK;
+                MessageBoxEx.Show(this, ex.Message, "警告", messButton);
+            }
+        }
+
+        /// <summary>
+        /// Excel转Json二进制
+        /// </summary>
+        private void ToJsonBinary()
+        {
+            try
+            {
+                List<DataTable> dataTableList = GetDataTablesFromExcel(textBox_ExcelPath.Text);
+
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.Append("{\n");
+
+                for (int i = 0; i < dataTableList.Count; i++)
+                {
+                    if (i < dataTableList.Count - 1)
+                    {
+                        stringBuilder.Append(DataTableToJson(dataTableList[i]) + ",\n");
+                    }
+                    else
+                    {
+                        stringBuilder.Append(DataTableToJson(dataTableList[i]) + "\n");
+                    }
+                }
+
+                stringBuilder.Append("}");
+
+                //转化为二进制
+                byte[] unicodeData = Encoding.Unicode.GetBytes(stringBuilder.ToString());
+                BinaryHelper.SaveBinary(outputPath + @"\" + textBox_FileName.Text + ".data", unicodeData);
+
+                MessageBoxButtons messButton = MessageBoxButtons.OK;
+                MessageBoxEx.Show(this, "Excel转Json二进制成功", "恭喜", messButton);
+            }
+            catch (Exception ex)
+            {
+                MessageBoxButtons messButton = MessageBoxButtons.OK;
+                MessageBoxEx.Show(this, ex.Message, "警告", messButton);
+            }
+        }
+
+        /// <summary>
+        /// Excel转Xml二进制
+        /// </summary>
+        private void ToXmlBinary()
+        {
+            try
+            {
+                Workbook workbook = new Workbook();
+                workbook.LoadFromFile(textBox_ExcelPath.Text);
+
+                MemoryStream ms = new MemoryStream();
+                workbook.SaveAsXml(ms);
+
+                //转化为二进制
+                string xmlStr = Encoding.UTF8.GetString(ms.ToArray());
+                byte[] unicodeData = Encoding.Unicode.GetBytes(xmlStr);
+                BinaryHelper.SaveBinary(outputPath + @"\" + textBox_FileName.Text + ".data", unicodeData);
+                ms.Close();
+
+                MessageBoxButtons messButton = MessageBoxButtons.OK;
+                MessageBoxEx.Show(this, "Excel转Xml二进制成功", "恭喜", messButton);
+            }
+            catch (Exception ex)
+            {
+                MessageBoxButtons messButton = MessageBoxButtons.OK;
+                MessageBoxEx.Show(this, ex.Message, "警告", messButton);
+            }
+        }
+
+        /// <summary>
+        /// Excel转C#类对象
+        /// </summary>
         private void ToCSharpClass()
         {
 
         }
 
-        private void ToBinary()
+        /// <summary>
+        /// Datatable 转 json
+        /// </summary>
+        /// <param name="table"></param>
+        /// <returns></returns>
+        private string DataTableToJson(DataTable table)
         {
+            var JsonString = new StringBuilder();
+            if (table.Rows.Count > 0)
+            {
+                JsonString.AppendLine($"    \"{table.TableName}\": [");
+                for (int i = 0; i < table.Rows.Count; i++)
+                {
+                    JsonString.AppendLine("        {");
+                    for (int j = 1; j < table.Columns.Count; j++)
+                    {
+                        string cellTitle = table.Columns[j].ColumnName.ToString();
+                        string cellContent = table.Rows[i][j].ToString();
 
+                        if (j < table.Columns.Count - 1)
+                        {
+                            if (IsString(cellContent))
+                            {
+                                string[] splitContent = cellContent.Split(new char[] { '\n', '\r' });
+                                string realityContent = "";
+
+                                splitContent.IFor((index, value) =>
+                                {
+                                    if (index < splitContent.Length - 1)
+                                    {
+                                        realityContent += $"{value}\\n";
+                                    }
+                                    else
+                                    {
+                                        realityContent += value;
+                                    }
+                                });
+
+                                JsonString.AppendLine("            \"" + cellTitle + "\": " + "\"" + realityContent + "\",");
+                            }
+                            else { JsonString.AppendLine("            \"" + cellTitle + "\": " + cellContent + ","); }
+                        }
+                        else if (j == table.Columns.Count - 1)
+                        {
+                            if (IsString(cellContent))
+                            {
+                                string[] splitContent = cellContent.Split(new char[] { '\n', '\r' });
+                                string realityContent = "";
+
+                                splitContent.IFor((index, value) =>
+                                {
+                                    if (index < splitContent.Length - 1)
+                                    {
+                                        realityContent += $"{value}\\n";
+                                    }
+                                    else
+                                    {
+                                        realityContent += value;
+                                    }
+                                });
+
+                                JsonString.AppendLine("            \"" + cellTitle + "\": " + "\"" + cellContent + "\"");
+                            }
+                            else { JsonString.AppendLine("            \"" + cellTitle + "\": " + cellContent); }
+                        }
+                    }
+                    if (i == table.Rows.Count - 1)
+                    {
+                        JsonString.AppendLine("        }");
+                    }
+                    else
+                    {
+                        JsonString.AppendLine("        },");
+                    }
+                }
+                JsonString.Append("    ]");
+            }
+            return JsonString.ToString();
         }
 
-        private void ToJsonBinary()
+        /// <summary>
+        /// 将Excel数据转换成DataTable
+        /// </summary>
+        /// <param name="excelPath"></param>
+        /// <returns></returns>
+        private List<DataTable> GetDataTablesFromExcel(string excelPath)
         {
+            List<DataTable> dataTableList = new List<DataTable>();
 
+            FileInfo fileInfo = new FileInfo(excelPath);
+
+            using (FileStream fileStream = fileInfo.Open(FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                IWorkbook workbook = Path.GetExtension(excelPath) == ".xls" ? (IWorkbook)new HSSFWorkbook(fileStream) : (IWorkbook)new XSSFWorkbook(fileStream);
+                for (int index = 0; index < workbook.NumberOfSheets; index++)
+                {
+                    DataTable dataTable = new DataTable();
+                    ISheet sheet = workbook.GetSheetAt(index);
+                    if (sheet == null) { continue; }
+                    dataTable.TableName = sheet.SheetName;
+                    int rowsCount = sheet.PhysicalNumberOfRows;//获取Excel的最大行数
+                    if (rowsCount <= 1) continue;
+
+                    //为保证Table布局与Excel一样，这里应该取所有行中的最大列数（需要遍历整个Sheet）。
+                    //为少一交全Excel遍历，提高性能，我们可以人为把第0行的列数调整至所有行中的最大列数。
+                    int colsCount = sheet.GetRow(0).PhysicalNumberOfCells;
+
+                    //取表格第二行（标题）为Columns
+                    for (int i = 0; i < colsCount; i++)
+                    {
+                        var cellValue = sheet.GetRow(1).GetCell(i);
+                        dataTable.Columns.Add(cellValue?.ToString());
+                    }
+
+                    //从第三行取数据，第一行默认为标题
+                    for (int x = 3; x < rowsCount; x++)
+                    {
+                        DataRow dr = dataTable.NewRow();
+                        for (int y = 0; y < colsCount; y++)
+                        {
+                            var cellValue = sheet.GetRow(x).GetCell(y);
+                            dr[y] = cellValue?.ToString();
+                        }
+                        dataTable.Rows.Add(dr);
+                    }
+                    dataTableList.Add(dataTable);
+                }
+            }
+            return dataTableList;
+        }
+
+        /// <summary>
+        /// 判断是否为字符串
+        /// </summary>
+        /// <param name="cellContent">要判断的string字符串</param>
+        /// <returns>true/false</returns>
+        private bool IsString(string cellContent)
+        {
+            if (int.TryParse(cellContent, out _)) { return false; }
+            if (bool.TryParse(cellContent, out _)) { return false; }
+            if (float.TryParse(cellContent, out _)) { return false; }
+
+            return true;
         }
     }
 

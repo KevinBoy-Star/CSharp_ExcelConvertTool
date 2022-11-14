@@ -1,7 +1,6 @@
 G:\Git\CSharp_ExcelConvertTool\CSharp_ExcelConvertTool\bin\Debug\CSharp_ExcelConvertTool.exe.config
 G:\Git\CSharp_ExcelConvertTool\CSharp_ExcelConvertTool\bin\Debug\CSharp_ExcelConvertTool.exe
 G:\Git\CSharp_ExcelConvertTool\CSharp_ExcelConvertTool\bin\Debug\CSharp_ExcelConvertTool.pdb
-G:\Git\CSharp_ExcelConvertTool\CSharp_ExcelConvertTool\obj\Debug\CSharp_ExcelConvertTool.csproj.AssemblyReference.cache
 G:\Git\CSharp_ExcelConvertTool\CSharp_ExcelConvertTool\obj\Debug\CSharp_ExcelConvertTool.Form_ExcelConvert.resources
 G:\Git\CSharp_ExcelConvertTool\CSharp_ExcelConvertTool\obj\Debug\CSharp_ExcelConvertTool.Properties.Resources.resources
 G:\Git\CSharp_ExcelConvertTool\CSharp_ExcelConvertTool\obj\Debug\CSharp_ExcelConvertTool.csproj.GenerateResource.cache
@@ -25,3 +24,8 @@ G:\Git\CSharp_ExcelConvertTool\CSharp_ExcelConvertTool\bin\Debug\NPOI.OpenXml4Ne
 G:\Git\CSharp_ExcelConvertTool\CSharp_ExcelConvertTool\bin\Debug\NPOI.OpenXml4Net.xml
 G:\Git\CSharp_ExcelConvertTool\CSharp_ExcelConvertTool\bin\Debug\NPOI.OpenXmlFormats.pdb
 G:\Git\CSharp_ExcelConvertTool\CSharp_ExcelConvertTool\obj\Debug\CSharp_ExcelConvertTool.csproj.CopyComplete
+G:\Git\CSharp_ExcelConvertTool\CSharp_ExcelConvertTool\bin\Debug\Spire.Pdf.dll
+G:\Git\CSharp_ExcelConvertTool\CSharp_ExcelConvertTool\bin\Debug\Spire.XLS.dll
+G:\Git\CSharp_ExcelConvertTool\CSharp_ExcelConvertTool\bin\Debug\Microsoft.mshtml.dll
+G:\Git\CSharp_ExcelConvertTool\CSharp_ExcelConvertTool\bin\Debug\Spire.Pdf.xml
+G:\Git\CSharp_ExcelConvertTool\CSharp_ExcelConvertTool\bin\Debug\Spire.XLS.xml
